@@ -7,12 +7,24 @@
 //
 
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    cout << "Hello, World!\n";
+    int k = 4, L = 5;
+    int index;
+    
+    for (index = 0; index < argc; index++) {
+        if (strcmp(argv[index], "-k") == 0) {
+            k = atoi(argv[index]);
+        }
+        else if (strcmp(argv[index], "-L") == 0) {
+            L = atoi(argv[index]);
+        }
+    }
+    
+    cout << k << ", " << L << endl;
     
     return 0;
 }
