@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include "SKARandomBitString.hpp"
 
 using namespace std;
 
@@ -35,6 +36,11 @@ int main(int argc, const char * argv[]) {
             o = string(argv[index+1]);
         }
     }
+    
+    initTime();
+    
+    const string bitString = generateRandomBitString();
+    cout << bitString << endl;
     
     return 0;
 }
