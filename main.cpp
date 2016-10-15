@@ -17,10 +17,10 @@ int main(int argc, const char * argv[]) {
     
     for (index = 0; index < argc; index++) {
         if (strcmp(argv[index], "-k") == 0) {
-            k = atoi(argv[index]);
+            k = atoi(argv[index+1]);
         }
         else if (strcmp(argv[index], "-L") == 0) {
-            L = atoi(argv[index]);
+            L = atoi(argv[index+1]);
         }
     }
     
