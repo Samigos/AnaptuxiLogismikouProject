@@ -7,13 +7,17 @@
 //
 
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <stdlib.h>
 
 using namespace std;
 
+void createRandomBitString();
+
 int main(int argc, const char * argv[]) {
     int k = 4, L = 5;
+    string d;
+    
     int index;
     
     for (index = 0; index < argc; index++) {
@@ -23,9 +27,12 @@ int main(int argc, const char * argv[]) {
         else if (strcmp(argv[index], "-L") == 0) {
             L = atoi(argv[index+1]);
         }
+        else if (strcmp(argv[index], "-d") == 0) {
+            d = string(argv[index+1]);
+        }
     }
     
     cout << k << ", " << L << endl;
-    
+
     return 0;
 }
