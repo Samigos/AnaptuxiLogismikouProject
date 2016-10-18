@@ -37,10 +37,6 @@ int main(int argc, const char * argv[]) {
         }
     }
     
-    initTime();
-    
-    const string bitString = generateRandomBitString();
-    cout << bitString << endl;
         
     return 0;
 }

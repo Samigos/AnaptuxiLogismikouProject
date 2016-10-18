@@ -15,12 +15,12 @@ SKAHashTable::SKAHashTable(int k, int L) {
     
 }
 
-void initTime() {
+void SKAHashTable::initTime() {
     long currentTime = time(NULL);
     srand((unsigned int) currentTime);
 }
 
-string generateRandomBitString() {
+string SKAHashTable::generateRandomBitString() {
     int numberOfBits = 0;
     string bitString;
     

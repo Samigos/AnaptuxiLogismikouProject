@@ -15,15 +15,15 @@
 #include <stdlib.h>
 #include "SKAList.hpp"
 
-void initTime();
-std::string generateRandomBitString();
-
 class SKAHashTable {
     SKAList list;
     
 public:
-    SKAHashTable(int k = 4, int L = 5);
+    SKAHashTable(int, int);
     ~SKAHashTable() {};
+    
+    void initTime();
+    std::string generateRandomBitString();
 };
 
 #endif /* SKAHashTable_hpp */
