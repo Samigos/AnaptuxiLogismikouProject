@@ -10,7 +10,7 @@
         std::string line = "";
 	while (getline(file, line))
 		{
-		int pos = line.find_first_of("\tab");
+		int pos = line.find_first_of("\t");
 		line= line.substr(pos+1);
 		cout << line << endl;
 		}
