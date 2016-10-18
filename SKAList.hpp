@@ -18,7 +18,7 @@ typedef struct List {
 } List;
 
 class SKAList {
-    List list;
+    List *head, *list;
     
 public:
     SKAList();

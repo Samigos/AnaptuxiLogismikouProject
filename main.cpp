@@ -10,6 +10,7 @@
 #include <string>
 #include <stdlib.h>
 #include "SKARandomBitString.hpp"
+#include "SKAHashTable.hpp"
 
 using namespace std;
 
@@ -41,6 +42,6 @@ int main(int argc, const char * argv[]) {
     
     const string bitString = generateRandomBitString();
     cout << bitString << endl;
-    
+        
     return 0;
 }
