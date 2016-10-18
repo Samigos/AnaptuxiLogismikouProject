@@ -18,6 +18,7 @@ typedef struct List {
 } List;
 
 class SKAList {
+    List list;
     
 public:
     SKAList(int k = 4, int L = 5);
