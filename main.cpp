@@ -9,7 +9,6 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
-#include "SKARandomBitString.hpp"
 #include "SKAHashTable.hpp"
 
 using namespace std;
