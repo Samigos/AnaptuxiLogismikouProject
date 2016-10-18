@@ -21,7 +21,7 @@ class SKAList {
     List list;
     
 public:
-    SKAList(int k = 4, int L = 5);
+    SKAList();
     ~SKAList();
     
     void add(std::string);
