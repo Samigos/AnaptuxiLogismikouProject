@@ -22,7 +22,7 @@ class SKAList {
     
 public:
     SKAList();
-    ~SKAList();
+    ~SKAList() {};
     
     void add(std::string);
     void print();

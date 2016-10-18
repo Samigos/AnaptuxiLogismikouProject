@@ -10,7 +10,7 @@
 
 using namespace std;
 
-SKAList::SKAList(int k, int L) {
+SKAList::SKAList() {
     
 }
 
