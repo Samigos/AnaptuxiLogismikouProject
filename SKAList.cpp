@@ -7,13 +7,27 @@
 //
 
 #include "SKAList.hpp"
+#include <stdlib.h>
 
 using namespace std;
 
-SKAList::SKAList() {
+void SKAList::add(std::string newValue) {
+    List *temp = (List*)malloc(sizeof(List));
+    temp->value = newValue;
     
+    if (head == NULL) {
+        head = temp;
+        head->next = NULL;
+    }
+    else {
+        temp->next = head;
+        head = temp;
+    }
 }
 
-void SKAList::add(std::string newValue) {
-    
+void SKAList::print() {
+    while (head != NULL) {
+        cout << head->value << endl;
+        head = head->next;
+    }
 }

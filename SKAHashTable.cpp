@@ -7,16 +7,11 @@
 //
 
 #include "SKAHashTable.hpp"
-#include <iostream>
 
 using namespace std;
 
-SKAHashTable::SKAHashTable() {
-    
-}
-
 void SKAHashTable::initHashTable(int k) {
-    
+    list = (SKAList*)malloc(sizeof(SKAList) * k);
 }
 
 void SKAHashTable::initTime() {
@@ -29,7 +24,7 @@ string SKAHashTable::generateRandomBitString() {
     string bitString;
     
     while (numberOfBits++ < 64) {
-        const int randomBit = rand() % 2;
+        const int randomBit = rand() % 2; // Generate random number from 0 to 1
         bitString += to_string(randomBit);
     }
     

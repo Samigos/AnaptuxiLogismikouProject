@@ -9,7 +9,7 @@
 #ifndef SKAHashTable_hpp
 #define SKAHashTable_hpp
 
-#include <stdio.h>
+#include <iostream>
 #include <time.h>
 #include <string>
 #include <stdlib.h>
@@ -19,7 +19,7 @@ class SKAHashTable {
     SKAList *list;
     
 public:
-    SKAHashTable();
+    SKAHashTable() {};
     ~SKAHashTable() {};
     
     void initHashTable(int);

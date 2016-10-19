@@ -9,7 +9,7 @@
 #ifndef SKAList_hpp
 #define SKAList_hpp
 
-#include <stdio.h>
+#include <iostream>
 #include <string>
 
 typedef struct List {
@@ -18,10 +18,10 @@ typedef struct List {
 } List;
 
 class SKAList {
-    List *head, *list;
+    List *head;
     
 public:
-    SKAList();
+    SKAList() {};
     ~SKAList() {};
     
     void add(std::string);
