@@ -16,11 +16,16 @@
 #include "SKAList.hpp"
 
 class SKAHashTable {
-    SKAList list;
+    SKAList *list;
     
 public:
-    SKAHashTable(int, int);
+    SKAHashTable();
     ~SKAHashTable() {};
+    
+    void initHashTable(int);
+    
+    // -----------------------------------
+    // Random bit strings functions
     
     void initTime();
     std::string generateRandomBitString();

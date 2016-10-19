@@ -11,7 +11,11 @@
 
 using namespace std;
 
-SKAHashTable::SKAHashTable(int k, int L) {
+SKAHashTable::SKAHashTable() {
+    
+}
+
+void SKAHashTable::initHashTable(int k) {
     
 }
 

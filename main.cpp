@@ -14,10 +14,8 @@
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    int k = 4, L = 5;
-    string d, o, q;
-    
-    int index;
+    int k = 4, L = 5, index;
+    string d, q, o;
     
     for (index = 1; index < argc; index++) {
         if (strcmp(argv[index], "-d") == 0) {
@@ -37,6 +35,11 @@ int main(int argc, const char * argv[]) {
         }
     }
     
+    SKAHashTable *ht = new SKAHashTable[L];
+    
+    for (index = 0; index < L; index++) {
+        ht[index].initHashTable(k);
+    }
         
     return 0;
 }
