@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void shit() {
+void openFile(string filePath) {
     ifstream file("DataEuclidean.csv"); // eisodos tou arxeiou
     string line;
     
@@ -49,10 +49,10 @@ void shit() {
 
 using namespace std;
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     int k = 4, L = 5, index;
     string d, q, o;
-    shit();
+    
     for (index = 1; index < argc; index++) {
         if (strcmp(argv[index], "-d") == 0) {
             d = string(argv[index+1]);
@@ -70,6 +70,8 @@ int main(int argc, const char * argv[]) {
             o = string(argv[index+1]);
         }
     }
+    
+    openFile(d);
     
     SKAHashTable *ht = new SKAHashTable[L];
     
