@@ -15,39 +15,7 @@
 
 using namespace std;
 
-void openFile(string filePath) {
-    ifstream file("DataEuclidean.csv"); // eisodos tou arxeiou
-    string line;
-    
-    getline(file, line);
-    
-    if (line.find("@metric_space hamming") != std::string::npos) {
-        while (getline(file, line)) {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
-            
-            cout << line << endl;
-        }
-    }
-    else if ((line.find("@metric_space euclidean") != std::string::npos) ||
-             (line.find("@metric_space cosine") != std::string::npos)) {
-        
-        string currentLine = line;
-        getline(file, line);
-        
-        while (getline(file, line)) {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
-            
-            cout << line << endl;
-        }
-    }
-    else {
-        
-    }
-}
-
-using namespace std;
+void openFile(string, SKAHashTable*, int);
 
 int main(int argc, const char *argv[]) {
     int k = 4, L = 5, index;
@@ -71,13 +39,51 @@ int main(int argc, const char *argv[]) {
         }
     }
     
-    openFile(d);
-    
     SKAHashTable *ht = new SKAHashTable[L];
     
     for (index = 0; index < L; index++) {
         ht[index].initHashTable(k);
     }
-        
+    
+    ht->initTime();
+    openFile(d, ht, L);
+    
+    for (index = 0; index < L; index++) {
+        ht[index].print();
+    }
+    
     return 0;
+}
+
+void openFile(string filePath, SKAHashTable *hashTable, int numberOfHashTables) {
+    ifstream file(filePath);
+    string line;
+    
+    getline(file, line);
+    
+    if (line.find("@metric_space hamming") != string::npos) {
+        while (getline(file, line)) {
+            unsigned long pos = line.find_first_of("\t");
+            line = line.substr(pos+1);
+
+            const int randomHashIndex = rand() % numberOfHashTables;
+            hashTable[randomHashIndex].addBitString(line);
+        }
+    }
+    else if ((line.find("@metric_space euclidean") != string::npos) ||
+             (line.find("@metric_space cosine") != string::npos)) {
+        
+        string currentLine = line;
+        getline(file, line);
+        
+        while (getline(file, line)) {
+            unsigned long pos = line.find_first_of("\t");
+            line = line.substr(pos+1);
+            
+            cout << line << endl;
+        }
+    }
+    else {
+        
+    }
 }

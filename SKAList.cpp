@@ -12,7 +12,7 @@
 using namespace std;
 
 void SKAList::add(std::string newValue) {
-    List *temp = (List*)malloc(sizeof(List));
+    List *temp = new List;
     temp->value = newValue;
     
     if (head == NULL) {

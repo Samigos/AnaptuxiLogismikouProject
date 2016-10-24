@@ -13,16 +13,21 @@
 #include <time.h>
 #include <string>
 #include <stdlib.h>
+#include <math.h>
 #include "SKAList.hpp"
 
 class SKAHashTable {
     SKAList *list;
+    int numberOfBuckets;
     
+    int hashFunction(std::string bitString);
 public:
     SKAHashTable() {};
     ~SKAHashTable() {};
     
     void initHashTable(int);
+    void addBitString(std::string);
+    void print();
     
     // -----------------------------------
     // Random bit strings functions

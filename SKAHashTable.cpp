@@ -11,7 +11,33 @@
 using namespace std;
 
 void SKAHashTable::initHashTable(int k) {
-    list = (SKAList*)malloc(sizeof(SKAList) * k);
+    numberOfBuckets = 8;
+    list = new SKAList[numberOfBuckets];
+}
+
+void SKAHashTable::addBitString(string bitString) {
+    const int hashedIndexValue = hashFunction(bitString);
+    list[hashedIndexValue].add(bitString);
+}
+
+int SKAHashTable::hashFunction(string bitString) {
+    int index, sum = 0;
+    
+    for (index = 0; index < bitString.length(); index++) {
+        const char value = bitString[index];
+        sum += atoi(&value);
+    }
+
+    return sum % numberOfBuckets;
+}
+
+void SKAHashTable::print() {
+    int index;
+    
+    for (index = 0; index < numberOfBuckets; index++) {
+        cout << "Contents of bucket no " << index+1 << ":" << endl;
+        list[index].print();
+    }
 }
 
 void SKAHashTable::initTime() {
@@ -30,3 +56,4 @@ string SKAHashTable::generateRandomBitString() {
     
     return bitString;
 }
+
