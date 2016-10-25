@@ -11,7 +11,7 @@
 using namespace std;
 
 void SKAHashTable::initHashTable(int k) {
-    numberOfBuckets = 8;
+    numberOfBuckets = pow(2, k);
     list = new SKAList[numberOfBuckets];
 }
 

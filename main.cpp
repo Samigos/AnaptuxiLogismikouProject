@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void openFile(string, SKAHashTable*, int);
+int openFile(string, bool, string*);
 
 int main(int argc, const char *argv[]) {
     int k = 4, L = 5, index;
@@ -45,29 +45,47 @@ int main(int argc, const char *argv[]) {
         ht[index].initHashTable(k);
     }
     
-    ht->initTime();
-    openFile(d, ht, L);
+    int arraySize = openFile(d, true, NULL);
     
-    for (index = 0; index < L; index++) {
-        ht[index].print();
+    string *dataArray = new string[arraySize];
+    openFile(d, false, dataArray);
+    
+    int i;
+    for (i = 0; i < arraySize; i++) {
+        cout << dataArray[i] << endl;
     }
     
     return 0;
 }
 
-void openFile(string filePath, SKAHashTable *hashTable, int numberOfHashTables) {
+int openFile(string filePath, bool calledForCount, string *dataArray) {
     ifstream file(filePath);
     string line;
     
     getline(file, line);
     
     if (line.find("@metric_space hamming") != string::npos) {
-        while (getline(file, line)) {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
-
-            const int randomHashIndex = rand() % numberOfHashTables;
-            hashTable[randomHashIndex].addBitString(line);
+        if (calledForCount) {
+            int count = 0;
+            
+            while (getline(file, line)) {
+                count++;
+            }
+            
+            return count;
+        }
+        else {
+            int index = 0;
+            
+            while (getline(file, line)) {
+                unsigned long pos = line.find_first_of("\t");
+                line = line.substr(pos+1);
+                
+                dataArray[index] = line;
+                index++;
+            }
+            
+            return 0;
         }
     }
     else if ((line.find("@metric_space euclidean") != string::npos) ||
@@ -86,4 +104,5 @@ void openFile(string filePath, SKAHashTable *hashTable, int numberOfHashTables) 
     else {
         
     }
+    return 0;
 }
