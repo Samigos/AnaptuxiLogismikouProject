@@ -63,13 +63,13 @@ int openFile(string filePath, bool calledForCount, string *dataArray) {
     string line;
     
     getline(file, line);
+    int count = 0;
     
     if (line.find("@metric_space hamming") != string::npos) {
         if (calledForCount) {
-            int count = 0;
             
             while (getline(file, line)) {
-                count++;
+		count++;
             }
             
             return count;
@@ -91,15 +91,30 @@ int openFile(string filePath, bool calledForCount, string *dataArray) {
     else if ((line.find("@metric_space euclidean") != string::npos) ||
              (line.find("@metric_space cosine") != string::npos)) {
         
-        string currentLine = line;
-        getline(file, line);
-        
-        while (getline(file, line)) {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
-            
-            cout << line << endl;
+	 string currentLine = line;
+       	 getline(file, line);
+	 if(calledForCount) { 
+ 
+            while (getline(file, line)) {
+	        count++;;
+            } 
+	
+	    return count;
         }
+        else {
+	    int index = 0;
+
+	    while (getline(file,line)){
+	        unsigned long pos = line.find_first_of("\t");
+                line = line.substr(pos+1);
+            
+                cout << line << endl;
+                dataArray[index]=line;
+	        index++;
+	    }
+
+            return 0;
+       }
     }
     else {
         
