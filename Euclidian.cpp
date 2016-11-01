@@ -10,18 +10,37 @@
 #include <math.h>
 
 using namespace std;
+double distanceCalculate(double, double, double, double, int, int, int);
 
 double distanceCalculate(double x1, double y1, double x2, double y2, int radius) {
     double x = x1 - x2; //calculating number to square in next step
     double y = y1 - y2;
     double dist;
+	int count = 0;
     
     dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
     dist = sqrt(dist);
-    
-    if (dist < radius) {
-        return dist;
-    }
-    
+
+
+			dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
+			dist = sqrt(dist);
+			if (dist < radius) {
+
+				dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
+			    dist = sqrt(dist);
+				count++;
+
+	}
+	for (j = 0; j < size1; j++) {
+		for (i = 0; i < size2; i++{
+
+				if (dist < radius) {
+
+					dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
+					dist = sqrt(dist);
+					count++;
+				}
+		}
+	}
     return dist;
 }
