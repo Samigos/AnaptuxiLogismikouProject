@@ -21,7 +21,7 @@ using namespace std;
 
 void initTime();
 
-int readDataFile(string, int, string*);
+double** readDataFile(string, string*, int*, int*);
 int readQueryFile(string, bool, string*);
 
 int main(int argc, const char *argv[]) {
@@ -53,14 +53,23 @@ int main(int argc, const char *argv[]) {
         hashTable[index].init(k);
     }
     
-    int arraySize = readDataFile(d, 1, NULL);
+    int *queryPointsArrayRows, *queryPointsArrayColumns;
+    double **dataArray = readDataFile(d, NULL, queryPointsArrayRows, queryPointsArrayColumns);
     
-    string *dataArray = new string[arraySize];
-    readDataFile(d, 2, dataArray);
-    
-    int i;
-    for (i = 0; i < arraySize; i++) {
-        cout << dataArray[i] << endl;
+    if (dataArray != NULL) {
+        int rows, columns;
+        int i, j;
+        
+        rows = *queryPointsArrayRows;
+        columns = *queryPointsArrayColumns;
+        
+        for (i = 0; i < rows; i++) {
+            for (j = 0; j < columns; j++) {
+                cout << dataArray[i][j] << endl;
+            }
+            
+            cout << "\n" << endl;
+        }
     }
     
     return 0;
@@ -70,8 +79,8 @@ void initTime() {
     long currentTime = time(NULL);
     srand((unsigned int) currentTime);
 }
-//double readDataFile(string filePath, int calledFor, string *dataArray)
-int readDataFile(string filePath, int calledFor, string *dataArray) {
+
+double** readDataFile(string filePath, string *dataArray, int *queryPointsArrayRows, int *queryPointsArrayColumns) {
     ifstream file(filePath);
     string line;
     int id = 0;
@@ -101,68 +110,81 @@ int readDataFile(string filePath, int calledFor, string *dataArray) {
             index++;
         }
         
-        return 0;
+        return NULL;
     }
     else if (line.find("@metric_space euclidean") != string::npos) {
         id = EUCLIDIAN;
         
         int count = 0;
-        unsigned long pos;
-
+        getline(file, line);
+        
         while (getline(file, line)) {
             count++;
         }
-        
-        // ----------------------
+        cout << count << endl;
+        // --------------------------------------------
         
         ifstream file(filePath);
         string line;
         
         int dim = 0;
+        string previousSubstring;
+        
+        getline(file, line);
+        getline(file, line);
         getline(file, line);
         
         while (line != "!\n") {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
+            const unsigned long pos = line.find_first_of("\t");
             
+            if (pos == -1) {
+                break;
+            }
+            
+            line = line.substr(pos+1);
             dim++;
         }
-        
-        // ----------------------
+        cout << dim << endl;
+        // --------------------------------------------
         
         ifstream file2(filePath);
         string line2;
+        
+        getline(file2, line2);
         getline(file2, line2);
         
-        int index = 0;
         int size;
-        
-        string **queryPoints = new string*[count];
-		//double queryPoints[count][dim];
+        double **queryPointsArray = new double*[count];
         
         for (size = 0; size < count; size++) {
-            queryPoints[size] = new string[dim];
+            queryPointsArray[size] = new double[dim];
         }
         
         size = 0;
-        
+        cout << dim << endl;
+        //string::size_type fred;
+
         while (getline(file2, line2)) {
             int i;
+            
+            unsigned long pos = line2.find_first_of("\t");
             line2 = line2.substr(pos+1);
             
             for (i = 0; i < dim; i++) {
-                unsigned long pos = line.find_first_of("\t");
+                //cout << stod(line2, &fred) << endl;
+
+                cout << stod(line2.substr(0, pos+8)) << endl;
+                queryPointsArray[size][i] = stod(line2.substr(0, pos+8));
                 
-                queryPoints[size][i] = line2.substr(0, pos);
-				//queryPoints[size][i] = stod(line2.substr(0,pos))
+                pos = line2.find_first_of("\t");
                 line2 = line2.substr(pos+1);
-                
             }
             
             size++;
         }
-        
-        return 0;
+        cout << "\n\n" << endl;
+
+        return queryPointsArray;
     }
     else if (line.find("@metric_space cosine") != string::npos) {
         id = COSINE;
@@ -180,7 +202,7 @@ int readDataFile(string filePath, int calledFor, string *dataArray) {
     
     return 0;
 }
-//double readQueryFile(string filePath, int calledFor, string *dataArray, int id)
+
 int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
     ifstream file(filePath);
     string line;
@@ -245,8 +267,8 @@ int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
         string line2;
         getline(file2, line2);
         
+        int index = 0;
         string **queryPoints = new string*[count];
-		//double queryPoints[count][dim];
         int size;
         
         for (size = 0; size < count; size++) {
@@ -263,10 +285,9 @@ int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
                 unsigned long pos = line.find_first_of("\t");
                 
                 queryPoints[size][i] = line2.substr(0, pos);
-				//queryPoints[size][i] = stod(line2.substr(0,pos))
-				line2 = line2.substr(pos+1);
-
+                line2 = line2.substr(pos+1);
                 
+                index++;
             }
             
             size++;
@@ -274,4 +295,5 @@ int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
         
         return 0;
     }
+    return 0;
 }

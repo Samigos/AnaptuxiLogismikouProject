@@ -56,6 +56,7 @@ int SKAHashTable::H(int metricSpaceId) {
     else if (metricSpaceId == COSINE) {
         
     }
+    return 0;
 }
 
 void SKAHashTable::G(int k, int L, int fileLines, int metricSpaceId) {

@@ -13,7 +13,7 @@ using namespace std;
 
 void SKAList::add(std::string newValue) {
     List *temp = new List;
-    temp->value = newValue;
+    temp->stringValue = newValue;
     
     if (head == NULL) {
         head = temp;
