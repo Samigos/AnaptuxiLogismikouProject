@@ -20,8 +20,11 @@
 using namespace std;
 
 void initTime();
-
-double** readDataFile(string, string*, int*, int*);
+double countDataFileham(ifstring, string);
+int countDataFileEu(ifstring, string);
+int getDataFiledim(ifstring, string);
+string readDataFileham(ifstring, string);
+double readDataFileEu(string, string*, int*, int*);
 int readQueryFile(string, bool, string*);
 
 int main(int argc, const char *argv[]) {
@@ -48,29 +51,55 @@ int main(int argc, const char *argv[]) {
     
     initTime();
     SKAHashTable *hashTable = new SKAHashTable[L];
-    
-    for (index = 0; index < L; index++) {
-        hashTable[index].init(k);
-    }
-    
-    int *queryPointsArrayRows, *queryPointsArrayColumns;
-    double **dataArray = readDataFile(d, NULL, queryPointsArrayRows, queryPointsArrayColumns);
-    
-    if (dataArray != NULL) {
-        int rows, columns;
-        int i, j;
-        
-        rows = *queryPointsArrayRows;
-        columns = *queryPointsArrayColumns;
-        
-        for (i = 0; i < rows; i++) {
-            for (j = 0; j < columns; j++) {
-                cout << dataArray[i][j] << endl;
-            }
-            
-            cout << "\n" << endl;
-        }
-    }
+
+	ifstream file(filePath);
+	string line;
+	int i;
+
+	getline(file, line);
+	if (line.find("@metric_space hamming") != string::npos) {
+		   
+		int i = 0;
+		int count = countDataFileham(file);
+		string datasetham[count];
+
+		ifstream file2(filePath);
+		while (getline(file2, line)) {
+		
+			datasetham[i] = readDataFileham(file2, line);
+			i++;
+		}
+
+	}
+	else if (line.find("@metric_space euclidean") != string::npos) {
+	
+		int count = countDataFileEu(file);
+
+			ifstream file2(filePath);
+
+			int dim = getDataFiledim(file2)
+
+				ifstream file3(filepath);
+
+			double dataseteu[count][dim];
+
+			getline(file3, line);
+			getline(file3, line);
+
+			int size;
+			while (getline(file3, line)) {
+
+				unsigned long pos = line.find_first_of("\t");
+				line = line.substr(pos + 1);
+
+				for (i = 0; i < dim; i++) {
+
+					dataseteu[size][i] = readDataFileEu(file3, line)
+				}
+
+				size++;
+			}
+	}
     
     return 0;
 }
@@ -79,114 +108,73 @@ void initTime() {
     long currentTime = time(NULL);
     srand((unsigned int) currentTime);
 }
+int countDataFileham(ifstring file, string line) {
+	
 
-double** readDataFile(string filePath, string *dataArray, int *queryPointsArrayRows, int *queryPointsArrayColumns) {
-    ifstream file(filePath);
-    string line;
-    int id = 0;
-    
-    getline(file, line);
-    
-    if (line.find("@metric_space hamming") != string::npos) {
-        id = HAMMING;
-        
-        int arraySize = 0;
-        
-        while (getline(file, line)) {
-            arraySize++;
-        }
-        
-        dataArray = new string[arraySize];
-        
-        // ----------------------
-        
-        int index = 0;
-        
-        while (getline(file, line)) {
+		int count = 0;
+
+		while (getline(file, line)) {
+			count++;
+		}
+		return count;
+	}
+
+string readDataFileham(ifstring file, string line) {
+
             unsigned long pos = line.find_first_of("\t");
             line = line.substr(pos+1);
-            
-            dataArray[index] = line;
-            index++;
+			
+			return line;
         }
-        
-        return NULL;
-    }
-    else if (line.find("@metric_space euclidean") != string::npos) {
-        id = EUCLIDIAN;
-        
-        int count = 0;
-        getline(file, line);
-        
-        while (getline(file, line)) {
-            count++;
-        }
-        cout << count << endl;
-        // --------------------------------------------
-        
-        ifstream file(filePath);
-        string line;
-        
-        int dim = 0;
-        string previousSubstring;
-        
-        getline(file, line);
-        getline(file, line);
-        getline(file, line);
-        
-        while (line != "!\n") {
-            const unsigned long pos = line.find_first_of("\t");
-            
-            if (pos == -1) {
-                break;
-            }
-            
-            line = line.substr(pos+1);
-            dim++;
-        }
-        cout << dim << endl;
-        // --------------------------------------------
-        
-        ifstream file2(filePath);
-        string line2;
-        
-        getline(file2, line2);
-        getline(file2, line2);
-        
-        int size;
-        double **queryPointsArray = new double*[count];
-        
-        for (size = 0; size < count; size++) {
-            queryPointsArray[size] = new double[dim];
-        }
-        
-        size = 0;
-        cout << dim << endl;
-        //string::size_type fred;
+int countDataFileEu(ifstring file, string line) {
+	
+	int count = 0;
+	getline(file, line);
 
-        while (getline(file2, line2)) {
-            int i;
+	while (getline(file, line)) {
+		count++;
+	}
+	
+	return count;
+    
+}
+int getDataFiledim(ifstring file, string line) {
+
+	string line;
+	int dim = 0;
+	string previousSubstring;
+
+	getline(file, line);
+	getline(file, line);
+	getline(file, line);
+
+	while (line.find_first_of("\t") != 1) {
+		const unsigned long pos = line.find_first_of("\t");
+
+		if (pos == -1) {
+			break;
+		}
+
+		line = line.substr(pos + 1);
+		dim++;
+	}
+
+	return dim;
+
+}
+double readDataFileEu(ifstring file, string line){
             
-            unsigned long pos = line2.find_first_of("\t");
-            line2 = line2.substr(pos+1);
-            
-            for (i = 0; i < dim; i++) {
                 //cout << stod(line2, &fred) << endl;
 
-                cout << stod(line2.substr(0, pos+8)) << endl;
-                queryPointsArray[size][i] = stod(line2.substr(0, pos+8));
+                cout << stod(line.substr(0, pos)) << endl;
+                queryPointsArray = stod(line.substr(0, pos));
                 
-                pos = line2.find_first_of("\t");
-                line2 = line2.substr(pos+1);
-            }
-            
-            size++;
-        }
-        cout << "\n\n" << endl;
+                pos = line.find_first_of("\t");
+                line = line.substr(pos+1);
 
         return queryPointsArray;
     }
-    else if (line.find("@metric_space cosine") != string::npos) {
+   /* else if (line.find("@metric_space cosine") != string::npos) {
         id = COSINE;
         
         string currentLine = line;
@@ -202,7 +190,7 @@ double** readDataFile(string filePath, string *dataArray, int *queryPointsArrayR
     
     return 0;
 }
-
+*/
 int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
     ifstream file(filePath);
     string line;
