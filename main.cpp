@@ -70,7 +70,7 @@ void initTime() {
     long currentTime = time(NULL);
     srand((unsigned int) currentTime);
 }
-
+//double readDataFile(string filePath, int calledFor, string *dataArray)
 int readDataFile(string filePath, int calledFor, string *dataArray) {
     ifstream file(filePath);
     string line;
@@ -138,6 +138,7 @@ int readDataFile(string filePath, int calledFor, string *dataArray) {
         int size;
         
         string **queryPoints = new string*[count];
+		//double queryPoints[count][dim];
         
         for (size = 0; size < count; size++) {
             queryPoints[size] = new string[dim];
@@ -153,9 +154,9 @@ int readDataFile(string filePath, int calledFor, string *dataArray) {
                 unsigned long pos = line.find_first_of("\t");
                 
                 queryPoints[size][i] = line2.substr(0, pos);
+				//queryPoints[size][i] = stod(line2.substr(0,pos))
                 line2 = line2.substr(pos+1);
                 
-                index++;
             }
             
             size++;
@@ -179,7 +180,7 @@ int readDataFile(string filePath, int calledFor, string *dataArray) {
     
     return 0;
 }
-
+//double readQueryFile(string filePath, int calledFor, string *dataArray, int id)
 int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
     ifstream file(filePath);
     string line;
@@ -244,8 +245,8 @@ int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
         string line2;
         getline(file2, line2);
         
-        int index = 0;
         string **queryPoints = new string*[count];
+		//double queryPoints[count][dim];
         int size;
         
         for (size = 0; size < count; size++) {
@@ -262,9 +263,10 @@ int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
                 unsigned long pos = line.find_first_of("\t");
                 
                 queryPoints[size][i] = line2.substr(0, pos);
-                line2 = line2.substr(pos+1);
+				//queryPoints[size][i] = stod(line2.substr(0,pos))
+				line2 = line2.substr(pos+1);
+
                 
-                index++;
             }
             
             size++;
