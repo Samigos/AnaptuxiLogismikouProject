@@ -13,19 +13,29 @@
 #include <fstream>
 #include "SKAHashTable.hpp"
 
-#define HAMMING 1
-#define EUCLIDIAN 2
-#define COSINE 3
 
 using namespace std;
 
+//----------------------------data files----------------------------/
+
 void initTime();
-double countDataFileham(ifstring, string);
+int countDataFileham(ifstring, string);
 int countDataFileEu(ifstring, string);
 int getDataFiledim(ifstring, string);
 string readDataFileham(ifstring, string);
-double readDataFileEu(string, string*, int*, int*);
+double readDataFileEu(ifstring, string);
+
+//----------------------------query files----------------------------//
+
+int countQueryFileham(ifstring, string);
+int countQueryFileEu(ifstring, string);
+int getQueryFiledim(ifstring, string);
+string readQueryFileham(ifstring, string);
+double readQueryFileEu(string, string*, int*, int*);
 int readQueryFile(string, bool, string*);
+
+//----------------------------Main----------------------------//
+
 
 int main(int argc, const char *argv[]) {
     int k = 4, L = 5, index;
@@ -59,9 +69,9 @@ int main(int argc, const char *argv[]) {
 	getline(file, line);
 	if (line.find("@metric_space hamming") != string::npos) {
 		   
-		int i = 0;
-		int count = countDataFileham(file);
-		string datasetham[count];
+		int countd = countDataFileham(file);
+
+		string datasetham[countd];
 
 		ifstream file2(filePath);
 		while (getline(file2, line)) {
@@ -69,19 +79,41 @@ int main(int argc, const char *argv[]) {
 			datasetham[i] = readDataFileham(file2, line);
 			i++;
 		}
+		//------------ diavasma dataset------------//
+		
+		ifstream file3(filePath);
+		getline(file3, line);
+		unsigned long pos = line.find_first_of(" ");
+
+		line = line.substr(pos + 1);
+		const int radius = stoi(line);
+		
+		i = 0;
+		int countq = countQueryFileham(file3); 
+
+		string querysetham[countq];
+
+		ifstream file4(filePath);
+		while (getline(file4, line)) {
+
+			querysetham[i] = readDataFileham(file2, line);
+			i++;
+		}
+		//------------ diavasma query------------//
+
 
 	}
 	else if (line.find("@metric_space euclidean") != string::npos) {
 	
-		int count = countDataFileEu(file);
+		int countd = countDataFileEu(file);
 
 			ifstream file2(filePath);
 
-			int dim = getDataFiledim(file2)
+			int datadim = getDataFiledim(file2)
 
-				ifstream file3(filepath);
+			ifstream file3(filepath);
 
-			double dataseteu[count][dim];
+			double dataseteu[countd][datadim];
 
 			getline(file3, line);
 			getline(file3, line);
@@ -92,16 +124,55 @@ int main(int argc, const char *argv[]) {
 				unsigned long pos = line.find_first_of("\t");
 				line = line.substr(pos + 1);
 
-				for (i = 0; i < dim; i++) {
+				for (i = 0; i < datadim; i++) {
 
 					dataseteu[size][i] = readDataFileEu(file3, line)
 				}
 
 				size++;
 			}
+			//------------ diavasma dataset------------//
+
+			ifstream file4(filePath);
+			getline(file4, line);
+			unsigned long pos = line.find_first_of(" ");
+
+			line = line.substr(pos + 1);
+			const int radius = stoi(line);
+
+			i = 0;
+
+			int countq = countQueryFileEu(file4);
+	
+			ifstream file4(filePath);
+
+			int querydim = getDataFiledim(file4)
+
+			ifstream file5(filepath);
+
+			double queryseteu[countq][querydim];
+			
+			getline(file5, line);
+
+			int size;
+			while (getline(file5, line)) {
+
+				unsigned long pos = line.find_first_of("\t");
+				line = line.substr(pos + 1);
+
+				for (i = 0; i < datadim; i++) {
+
+					queryseteu[size][i] = readQueryFileEu(file5, line)
+				}
+
+				size++;
+			}
+			//------------ diavasma dataset------------//
 	}
-    
+   
     return 0;
+
+	      
 }
 
 void initTime() {
@@ -110,7 +181,6 @@ void initTime() {
 }
 int countDataFileham(ifstring file, string line) {
 	
-
 		int count = 0;
 
 		while (getline(file, line)) {
@@ -148,7 +218,7 @@ int getDataFiledim(ifstring file, string line) {
 	getline(file, line);
 	getline(file, line);
 
-	while (line.find_first_of("\t") != 1) {
+	while (line.find_first_of("\t") != -1) {
 		const unsigned long pos = line.find_first_of("\t");
 
 		if (pos == -1) {
@@ -191,97 +261,68 @@ double readDataFileEu(ifstring file, string line){
     return 0;
 }
 */
-int readQueryFile(string filePath, int calledFor, string *dataArray, int id) {
-    ifstream file(filePath);
-    string line;
-    
-    getline(file, line);
-    unsigned long pos = line.find_first_of(" ");
-    
-    line = line.substr(pos+1);
-    const int radius = stoi(line);
-    
-    getline(file, line);
-    
-    if (id == HAMMING) {
-        if (calledFor == 1) {
-            int count = 0;
-            
-            while (getline(file, line)) {
-                count++;
-            }
-            
-            return count;
-        }
-        else {
-            int index = 0;
-            
-            while (getline(file, line)) {
-                unsigned long pos = line.find_first_of("\t");
-                line = line.substr(pos+1);
-                
-                dataArray[index] = line;
-                index++;
-            }
-            
-            return 0;
-        }
-    }
-    else if (line.find("@metric_space euclidean") != string::npos) {
-        int count = 0;
-        
-        while (getline(file, line)) {
-            count++;
-        }
-        
-        // ----------------------
-        
-        ifstream file(filePath);
-        string line;
-        
-        int dim = 0;
-        getline(file, line);
-        
-        while (line != "!\n") {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
-            
-            dim++;
-        }
-        
-        // ----------------------
-        
-        ifstream file2(filePath);
-        string line2;
-        getline(file2, line2);
-        
-        int index = 0;
-        string **queryPoints = new string*[count];
-        int size;
-        
-        for (size = 0; size < count; size++) {
-            queryPoints[size] = new string[dim];
-        }
-        
-        size = 0;
-        
-        while (getline(file2, line2)) {
-            int i;
-            line2 = line2.substr(pos+1);
 
-            for (i = 0; i < dim; i++) {
-                unsigned long pos = line.find_first_of("\t");
-                
-                queryPoints[size][i] = line2.substr(0, pos);
-                line2 = line2.substr(pos+1);
-                
-                index++;
-            }
-            
-            size++;
-        }
-        
-        return 0;
-    }
-    return 0;
+//--------------------------------------
+int  countQueryFileham(ifstring file, string line) {
+
+	int count = 0;
+
+	while (getline(file, line)) {
+		count++;
+	}
+	return count;
+}
+
+string readQueryFileham(ifstring file, string line) {
+
+	unsigned long pos = line.find_first_of("\t");
+	line = line.substr(pos + 1);
+
+	return line;
+}
+int countQueryFileEu(ifstring file, string line) {
+
+	int count = 0;
+
+	while (getline(file, line)) {
+		count++;
+	}
+
+	return count;
+
+}
+int getQueryFiledim(ifstring file, string line) {
+
+	string line;
+	int dim = 0;
+	string previousSubstring;
+
+	getline(file, line);
+	getline(file, line);
+
+	while (line.find_first_of("\t") != -1) {
+		const unsigned long pos = line.find_first_of("\t");
+
+		if (pos == -1) {
+			break;
+		}
+
+		line = line.substr(pos + 1);
+		dim++;
+	}
+
+	return dim;
+
+}
+double readQueryFileEu(ifstring file, string line) {
+
+	//cout << stod(line2, &fred) << endl;
+
+	cout << stod(line.substr(0, pos)) << endl;
+	queryPointsArray = stod(line.substr(0, pos));
+
+	pos = line.find_first_of("\t");
+	line = line.substr(pos + 1);
+
+	return queryPointsArray;
 }
