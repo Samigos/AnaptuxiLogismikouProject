@@ -27,7 +27,7 @@ void SKAList::add(std::string newValue) {
 
 void SKAList::print() {
     while (head != NULL) {
-        cout << head->value << endl;
+        //cout << head->value << endl;
         head = head->next;
     }
 }

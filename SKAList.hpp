@@ -14,13 +14,15 @@
 
 typedef struct List {
     List *next;
-    std::string value;
+    
+    std::string stringValue;
+    float floatValue;
 } List;
 
 class SKAList {
+public:
     List *head;
     
-public:
     SKAList() {};
     ~SKAList() {};
     
