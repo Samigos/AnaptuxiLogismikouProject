@@ -1,0 +1,82 @@
+//
+//  SKAHashTable.cpp
+//  ALProject
+//
+//  Created by Sotiris Kaniras on 19/10/16.
+//  Copyright © 2016 com.me. All rights reserved.
+//
+
+#include "SKAHashTable.hpp"
+
+using namespace std;
+
+void SKAHashTable::init(int k) {
+    numberOfBuckets = 2^k;
+    list = new SKAList[numberOfBuckets];
+    
+    xList = *new SKAList;
+    yList = *new SKAList;
+}
+
+
+void SKAHashTable::search() {
+    
+}
+
+void SKAHashTable::addBitString(string bitString) {
+    const int hashedIndexValue = hashFunction(bitString);
+    list[hashedIndexValue].add(bitString);
+}
+
+void SKAHashTable::addDouble(double number) {
+	const int hashedIndexValue = hashFunction(number);
+	list[hashedIndexValue].add(number);
+}
+
+int SKAHashTable::hashFunction(string bitString) {
+    int index, sum = 0;
+    
+    for (index = 0; index < bitString.length(); index++) {
+        const char value = bitString[index];
+        sum += atoi(&value);
+    }
+
+    return sum % numberOfBuckets;
+}
+
+int SKAHashTable::hashFunction(double numberValue) {
+	return numberValue % numberOfBuckets;
+}
+
+bool SKAHashTable::findDuplicateCoordinates(double coordinateXValue, double coordinateYValue) {
+    while (xList.head != NULL && yList.head != NULL) {
+        if (xList.head->floatValue == coordinateXValue && yList.head->floatValue == coordinateYValue) {
+            return true;
+        }
+        
+        xList.head = xList.head->next;
+        yList.head = yList.head->next;
+    }
+    
+    return false;
+}
+
+void SKAHashTable::print() {
+    int index;
+    
+    for (index = 0; index < numberOfBuckets; index++) {
+        cout << "Contents of bucket no " << index+1 << ":" << endl;
+        list[index].print();
+    }
+}
+
+std::string* SKAHashTable::getHeads(int i) {
+
+	//int i;
+	string *headsarray = new string[numberOfBuckets];
+	//for (i = 0; i < numberOfBuckets; i++) {
+
+		headsarray[i] = list[i]->head->stringValue;
+	//}
+	return headsarray[i];
+}
