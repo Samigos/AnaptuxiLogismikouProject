@@ -23,6 +23,7 @@ void SKAList::add(std::string newValue) {
         temp->next = head;
         head = temp;
     }
+    length++;
 }
 
 void SKAList::add(double newValue) {
@@ -37,6 +38,7 @@ void SKAList::add(double newValue) {
 		temp->next = head;
 		head = temp;
 	}
+	length++;
 }
 
 void SKAList::print() {

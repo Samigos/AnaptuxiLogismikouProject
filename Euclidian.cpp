@@ -10,7 +10,6 @@
 #include <math.h>
 
 using namespace std;
-double distanceCalculate(double, double, double, double, int, int, int);
 
 double distanceCalculate(double x1, double y1, double x2, double y2, int radius) {
     double x = x1 - x2; //calculating number to square in next step

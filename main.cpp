@@ -124,63 +124,44 @@ int main(int argc, const char *argv[]) {
 				hashTable[q].addBitString(datasetHam[e - 1]);
 			}
 		}
-		long long sotos = ConvertStringtolonglong(querysetHam[0]);
-		int sotakos = convertBinaryToDecimal(sotos);
-		long long stavros = ConvertStringtolonglong(hashTable[0].getHeads(0));
-		int stavrakos = convertBinaryToDecimal(stavros);
+		
+		int results[countd];
+		int j,o;
 
-		if (stavrakos > sotakos) {
+		for (q = 0; q < countq; q++) {
 
-			bitnumb = stavrakos - sotakos;
-		}
-		else {
-			bitnumb = sotakos - stavrakos;
-		}
+			
+			for (w = 0; w < (2 ^ k); w++) {
 
-		int min = bitnumb;
-		long long results[(2 ^ k)*L];
-		int J = 1;
+				
+				int dis = hamming_distance(querysetHam[q],hashTable[q].getHeads(w));
+			
+				if (radius > dis) {
 
-		for (q = 1; q < countq; q++) {
+							results = hashTable[q].getBody(w);
+							cout << "kontinoteros geitonas" << hashTable[q].getHeads(w);
 
-			sotos = ConvertStringtolonglong(querysetHam[q]);
-			sotakos = convertBinaryToDecimal(sotos);   //metatroph tou binary se arithmo
-			int bitnumb;
-			for (w = 1; w < (2 ^ k); w++) {
+							int min = dis);
+							for (o = 1; o < countd; o++){
 
-				stavros = ConvertStringtolonglong(hashTable[q].getHeads(w));
-				stavrakos = convertBinaryToDecimal(stavros);
+									int dis = hamming_distance(querysetHam[q],results[o]);
 
-				if (stavrakos > sotakos) {
+									if(dis < min){
 
-					bitnumb = stavrakos - sotakos;
-				}
-				else {
-					bitnumb = sotakos - stavrakos;
-				}
-				if (radius > bitnumb) {
+										min = dis;
+									}
+							}
 
-					if (min > bitnumb) {
-
-
-						results[J] = min;
-						min = bitnumb;
-						J++;
-
-					}
-					else {
-						results[J] = bitnumb;
-						J++;
-
-					}
+							cout << "True kontinoteros geitonas" << min;
 
 				}
+
 			}
+
 		}
+}
+	
 
-		results[0] = min;
-
-	}
 
 
 	else if (line.find("@metric_space euclidean") != string::npos) {
@@ -190,7 +171,7 @@ int main(int argc, const char *argv[]) {
         int dataDim = getDataFileDim(file2, line);
         ifstream file3(filePath);
 
-        double datasetEu[countd][dataDim];
+        string *datasetEu = new string[countd];
 
         getline(file3, line);
         getline(file3, line);
@@ -198,16 +179,10 @@ int main(int argc, const char *argv[]) {
         int size = 0;
         
         while (getline(file3, line)) {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos + 1);
-
-            for (i = 0; i < dataDim; i++) {
-                datasetEu[size][i] = readDataFileEu(file3, line, pos);
-            }
-
-            size++;
+                       	datasetEu[size] = readDataFileEu(file3, line);
+                       	size++;
         }
-        
+               
         //------------ diavasma dataset------------//
 
         ifstream file4(filePath);
@@ -242,6 +217,60 @@ int main(int argc, const char *argv[]) {
         }
         //------------ diavasma querry------------//
 	}
+	
+	   int** Geuc;	// deikths gia ton diplo pinaka ths euclidean
+	        int q, w, e, v;
+	        Geuc = G(k, L, EUCLIDEAN);
+	        
+	        for (q = 0; q < L; q++) {
+
+	        		for (w = 0; w < (2 ^ k); w++) {
+
+	        				e = Geuc[q][w];
+	        				hashTable[q].addBitString(datasetEu[e - 1]);
+	        			}
+	        }
+
+	        double dataEu[L][2 ^ k ][dataDim];
+
+	        for (q = 0; q < L; q++){
+
+	        		for (w = 0; w < (2 ^ k); w++)
+
+	        				pos = hashTable[q].getHeads(w);
+
+	        				for(v = 0; v < dataDim; v++){
+
+	        						dataEu[q][w][v] = ConvertFileEu(hastTable[q].getHeads(w), pos);
+	        				}
+
+	        		}
+	        }
+
+	       //int dis = hamming_distance(querysetHam[0],hashTable[0].getHeads(0));
+	        		//int min = dis;
+	        		int results[(2 ^ k)*L];
+	        		int J = 0;
+
+	        		for (q = 0; q < countq; q++) {
+
+
+	        				for (w = 0; w < (2 ^ k); w++) {
+
+	        				//long long stavros = ConvertStringtolonglong(hashTable[q].getHeads(w));
+	        				//int stavrakos = convertBinaryToDecimal(stavros);
+	        				int dis = hamming_distance(querysetHam[q],hashTable[q].getHeads(w));
+	        			
+	        				if (radius > dis) {
+
+
+	        				}
+	        			}
+	        		}
+
+
+	        
+		}
    
     return 0;
 
@@ -253,140 +282,3 @@ void initTime() {
     srand((unsigned int) currentTime);
 }
 
-int countDataFileHam(ifstream &file, string line) {
-    int count = 0;
-
-    while (getline(file, line)) {
-        count++;
-    }
-
-    return count;
-}
-
-string readDataFileHam(ifstream  &file, string line) {
-    unsigned long pos = line.find_first_of("\t");
-    line = line.substr(pos+1);
-    
-    return line;
-}
-
-int countDataFileEu(ifstream &file, string line) {
-	int count = 0;
-	getline(file, line);
-
-	while (getline(file, line)) {
-		count++;
-	}
-	
-	return count;
-}
-
-int getDataFileDim(ifstream &file, string line) {
-    string previousSubstring;
-    
-    int dim = 0;
-
-	getline(file, line);
-	getline(file, line);
-	getline(file, line);
-
-	while (line.find_first_of("\t") != -1) {
-		const unsigned long pos = line.find_first_of("\t");
-
-		if (pos == -1) {
-			break;
-		}
-
-		line = line.substr(pos + 1);
-		dim++;
-	}
-
-	return dim;
-}
-
-double readDataFileEu(ifstream &file, string line, unsigned long pos) {
-    double queryPointsArray;
-    queryPointsArray = stod(line.substr(0, pos));
-    
-    pos = line.find_first_of("\t");
-    line = line.substr(pos+1);
-
-    return queryPointsArray;
-}
-   /* else if (line.find("@metric_space cosine") != string::npos) {
-        id = COSINE;
-        
-        string currentLine = line;
-        getline(file, line);
-        
-        while (getline(file, line)) {
-            unsigned long pos = line.find_first_of("\t");
-            line = line.substr(pos+1);
-            
-            cout << line << endl;
-        }
-    }
-    
-    return 0;
-}
-*/
-
-//--------------------------------------
-int countQueryFileHam(ifstream &file, string line) {
-	int count = 0;
-
-	while (getline(file, line)) {
-		count++;
-	}
-    
-	return count;
-}
-
-string readQueryFileHam(ifstream &file, string line) {
-	unsigned long pos = line.find_first_of("\t");
-	line = line.substr(pos + 1);
-
-	return line;
-}
-
-int countQueryFileEu(ifstream &file, string line) {
-	int count = 0;
-
-	while (getline(file, line)) {
-		count++;
-	}
-
-	return count;
-}
-
-int getQueryFileDim(ifstream &file, string line) {
-	string previousSubstring;
-    
-    int dim = 0;
-    
-	getline(file, line);
-	getline(file, line);
-
-	while (line.find_first_of("\t") != -1) {
-		const unsigned long pos = line.find_first_of("\t");
-
-		if (pos == -1) {
-			break;
-		}
-
-		line = line.substr(pos + 1);
-		dim++;
-	}
-
-	return dim;
-}
-
-double readQueryFileEu(ifstream &file, string line, unsigned long pos) {
-    double queryPointsArray;
-    queryPointsArray = stod(line.substr(0, pos));
-
-	pos = line.find_first_of("\t");
-	line = line.substr(pos + 1);
-
-	return queryPointsArray;
-}

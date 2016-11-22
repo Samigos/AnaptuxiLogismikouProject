@@ -22,6 +22,7 @@ typedef struct List {
 class SKAList {
 public:
     List *head;
+    int length;
     
     SKAList() {};
     ~SKAList() {};

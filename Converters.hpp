@@ -2,8 +2,6 @@
 #define Converters_H
 
 
-long long ConvertStringtolonglong(string a);
-int convertBinaryToDecimal(long long x );
-long long convertDecimalToBinary(int y);
+double ConvertStringtolonglong(std::string);
 
 #endif

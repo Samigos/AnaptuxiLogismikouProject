@@ -34,7 +34,8 @@ public:
     
     void init(int);
     
-	bool getHeads(int);
+    std::string getHeads(int);
+	std::string getBody(int);
     void addBitString(std::string);
 	void addDouble(double);
     bool findDuplicateCoordinates(double, double);

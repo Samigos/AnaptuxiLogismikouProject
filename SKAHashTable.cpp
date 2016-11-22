@@ -19,9 +19,6 @@ void SKAHashTable::init(int k) {
 }
 
 
-void SKAHashTable::search() {
-    
-}
 
 void SKAHashTable::addBitString(string bitString) {
     const int hashedIndexValue = hashFunction(bitString);
@@ -70,13 +67,29 @@ void SKAHashTable::print() {
     }
 }
 
-std::string* SKAHashTable::getHeads(int i) {
+std::string SKAHashTable::getHeads(int i) {
 
 	//int i;
-	string *headsarray = new string[numberOfBuckets];
+	string headsarray;
 	//for (i = 0; i < numberOfBuckets; i++) {
 
-		headsarray[i] = list[i]->head->stringValue;
+		headsarray = list[i]->head->stringValue;
 	//}
-	return headsarray[i];
+	return headsarray;
+}
+
+std::string* SKAHashTable::getBody(int i){
+
+	const int length = list[i].length;
+	string* bodyarray = new string[length];
+	int j = 0;
+		while(list[i]->head != NULL){
+
+			bodyarray[j] = list[i]->head->stringValue;
+			list[i]->head = list[i]->head->next;
+			j++;
+		}
+
+	return bodyarray;
+
 }

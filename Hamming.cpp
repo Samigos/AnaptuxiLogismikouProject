@@ -1,29 +1,23 @@
 #include <iostream>
 #include <string>
+#include "Hamming.hpp"
+
 
 using namespace std;
-int hamming_distance(int, int, int);
 
-int hamming_distance(int num1, int num2, int radius) {
-	int result = 0;
+int hamming_distance(string& fs, string& ss){
+    int hm_distance = 0;
 
-		if (num1 > num2) {
+    if(fs.length() == ss.length()){
 
-			result = num1 - num2;
-		}
-		else {
+      for(int i = 0; i < fs.length(); i++){
 
-			result = num2 - num1;
-		}
+    	  if(!(fs[i] == ss[i])){
+          hm_distance++;
+        }
+      }
 
-		if (radius > result) {
-
-			return result;
-
-		}
-		else {
-			return -1;
-		}
-	}
-
+    }
+    return hm_distance;
+}
 	
