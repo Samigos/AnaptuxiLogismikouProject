@@ -11,22 +11,48 @@
 
 using namespace std;
 
-double distanceCalculate(double x1, double y1, double x2, double y2, int radius) {
-    double x = x1 - x2; //calculating number to square in next step
-    double y = y1 - y2;
+double distanceCalculate(double x1[][][], double y1[][], int q, int w , int e, int r, int t) {
+    double x = x1[q][w][0];
+    double y = y1[r][0];
     double dist;
+    int i;
+
+    for(i = 1; i < e; i++){
+
+    	x = x - x1[q][w][i];
+    }
+
+    for(i = 1; i < t; i++){
+
+    	y = y - y1[r][i];
+    }
+
+    dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
+    dist = sqrt(dist);
+
+
+    return dist;
+}
+
+double distanceCalculate(double x1[][], double y1[][], int q, int w , int e) {
+    double x = x1[q][0];
+    double y = y1[w][0];
+    double dist;
+    int i;
+
+    for(i = 1; i < e; i++){
+
+    	x = x - x1[q][i];
+    }
     
-	int count = 0;
+    for(i = 1; i < e; i++){
+
+    	y = y - y1[w][i];
+    }
     
     dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
     dist = sqrt(dist);
 
-    if (dist < radius) {
-        dist = pow(x, 2) + pow(y, 2); //calculating Euclidean distance
-        dist = sqrt(dist);
-        
-        count++;
-	}
              
     return dist;
 }

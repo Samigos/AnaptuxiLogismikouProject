@@ -139,7 +139,7 @@ int main(int argc, const char *argv[]) {
 				if (radius > dis) {
 
 							results = hashTable[q].getBody(w);
-							cout << "kontinoteros geitonas" << hashTable[q].getHeads(w);
+							cout << "kontinoteros geitonas" << hashTable[q].getHeads(w) << endl;
 
 							int min = dis);
 							for (o = 1; o < countd; o++){
@@ -152,7 +152,7 @@ int main(int argc, const char *argv[]) {
 									}
 							}
 
-							cout << "True kontinoteros geitonas" << min;
+							cout << "True kontinoteros geitonas"  << min << endl;
 
 				}
 
@@ -219,7 +219,7 @@ int main(int argc, const char *argv[]) {
 	}
 	
 	   int** Geuc;	// deikths gia ton diplo pinaka ths euclidean
-	        int q, w, e, v;
+	        int q, w, e, v, A;
 	        Geuc = G(k, L, EUCLIDEAN);
 	        
 	        for (q = 0; q < L; q++) {
@@ -237,45 +237,84 @@ int main(int argc, const char *argv[]) {
 
 	        		for (w = 0; w < (2 ^ k); w++)
 
-	        				pos = hashTable[q].getHeads(w);
+	        				pos = (hashTable[q].getHeads(w)).find_first_of("\t");
 
 	        				for(v = 0; v < dataDim; v++){
 
 	        						dataEu[q][w][v] = ConvertFileEu(hastTable[q].getHeads(w), pos);
 	        				}
 
-	        		}
 	        }
-
 	       //int dis = hamming_distance(querysetHam[0],hashTable[0].getHeads(0));
 	        		//int min = dis;
-	        		int results[(2 ^ k)*L];
-	        		int J = 0;
+	        double results[countd][dataDim];
+	        double J, minq;
+	        string* dataeustr = new string[L][2 ^ k][countd];
+	        unsigned long pos1[dataDim];
+	        e = 0;
+	        int K;
+	        for (q = 0; q < L; q++){
 
-	        		for (q = 0; q < countq; q++) {
+	        	for (w = 0; w < (2 ^ k); w++){
+
+	        		//pos1[w] = (hashTable[q].getHeads(w)).find_first_of("\t");
+
+	        		for (v = 0; v < countq; v++){
+
+	        				J = distanceCalculate(dataEu, querySetEu, q, w, dataDim, v, queryDim);
+
+	        				if(radius > J){
+
+	        					dataeustr[q][w] = hashTable[q].getBody(w);
+	        					while(dataeustr[q][w][e] != NULL)
+
+	        						while (A < dataDim) {
+
+	        							pos1[w] = (dataeustr[q][w][e].find_first_of("\t"));
+
+	        								J = ConvertFileEu(dataeustr[q][w][e], pos1[w]);
+	        								dataeustr[q][w][e] = dataeustr[q][w][e].substr(pos1[w] + 1);
+
+	        								results[e][A] = J;
+	        								A++;
+	        						}
+
+	        					e++;
+	        					}
 
 
-	        				for (w = 0; w < (2 ^ k); w++) {
+	        						cout << "kontinoteros geitonas" << results[e][0] << endl;
 
-	        				//long long stavros = ConvertStringtolonglong(hashTable[q].getHeads(w));
-	        				//int stavrakos = convertBinaryToDecimal(stavros);
-	        				int dis = hamming_distance(querysetHam[q],hashTable[q].getHeads(w));
-	        			
-	        				if (radius > dis) {
+	        				}
+
+
+	        				if (radius > J){
+
+	        					for(K = 0; K < e; K++){
+
+	        						min = results[K][0];
+
+	        						for (A = 1; A < dataDim; A++){
+
+	        							if (min > results[K][A]){
+
+	        								min = results[K][A];
+	        							}
+	        						}
+	        					}
 
 
 	        				}
-	        			}
+	        				e = 0;
 	        		}
 
+	        	}
+	        }
 
-	        
-		}
-   
     return 0;
 
 	      
-}
+    }
 
 void initTime() {
     long currentTime = time(NULL);

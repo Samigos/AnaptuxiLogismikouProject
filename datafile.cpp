@@ -62,9 +62,6 @@ double ConvertFileEu(string line, unsigned long pos) {
     double queryPointsArray;
     queryPointsArray = stod(line.substr(0, pos));
 
-    pos = line.find_first_of("\t");
-    line = line.substr(pos+1);
-
     return queryPointsArray;
 }
 
