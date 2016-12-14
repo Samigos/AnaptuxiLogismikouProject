@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string.h>
 #include <string>
 #include "datafile.hpp"
 
@@ -58,15 +57,7 @@ int getDataFileDim(ifstream &file, string line) {
 	return dim;
 }
 
-double ConvertFileEu(string line, unsigned long pos) {
-    double queryPointsArray;
-    queryPointsArray = stod(line.substr(0, pos));
-
-    return queryPointsArray;
-}
-
 string readDataFileEu(ifstream  &file, string line) {
-
 	unsigned long pos = line.find_first_of("\t");
     line = line.substr(pos+1);
 

@@ -12,7 +12,12 @@
 #include <sstream>
 #include <fstream>
 #include "SKAHashTable.hpp"
+#include "Hamming.hpp"
 #include "Converters.hpp"
+#include "datafile.hpp"
+#include "Euclidian.hpp"
+#include "Ghash.hpp"
+#include "SKAWriteToFile.hpp"
 
 #define HAMMING 1
 #define EUCLIDEAN 2
@@ -39,7 +44,6 @@ double readQueryFileEu(ifstream&, string, unsigned long);
 
 //----------------------------Main----------------------------//
 
-
 int main(int argc, const char *argv[]) {
     int k = 4, L = 5, index;
     string d, q, o;
@@ -64,7 +68,6 @@ int main(int argc, const char *argv[]) {
     
     initTime();
     SKAHashTable *hashTable = new SKAHashTable[L];
-
     
     for (index = 0; index < L; index++) {
         hashTable[index].init(k);
@@ -79,6 +82,7 @@ int main(int argc, const char *argv[]) {
 	int i;
     
 	getline(file, line);
+    
 	if (line.find("@metric_space hamming") != string::npos) {
 		int countd = countDataFileHam(file, line);
 		string *datasetHam = new string[countd];
@@ -110,60 +114,62 @@ int main(int argc, const char *argv[]) {
 			i++;
 		}
 
-
 		//------------ diavasma query------------//
 
 		int** Gham;
 		int q, w, e;
+        
 		Gham = G(k, L, countd, HAMMING);
-
+        
 		for (q = 0; q < L; q++) {
 			for (w = 0; w < (2 ^ k); w++) {
 				e = Gham[q][w];
-
-				hashTable[q].addBitString(datasetHam[e - 1]);
+				hashTable[q].addBitString(datasetHam[e - 1]); // mipws datasetHam[e]?
 			}
 		}
 		
-		int results[countd];
-		int j,o;
+		string *results = new string[countd];
+		int o;
+        
+        ofstream file;
+        SKACreateFile(file, "output.txt");
 
-		for (q = 0; q < countq; q++) {
+        for (q = 0; q < countq; q++) {
+            string queryItemHeader = "Query: ";
+            
+            string item = "item";
+            item += q;
+            
+            SKAWriteToFile(file, queryItemHeader + item);
+            SKAWriteToFile(file, "R-near neighbors:");
 
-			
 			for (w = 0; w < (2 ^ k); w++) {
-
-				
-				int dis = hamming_distance(querysetHam[q],hashTable[q].getHeads(w));
+				int dis = hamming_distance(querysetHam[q], hashTable[q].getHeads(w));
 			
-				if (radius > dis) {
+                if (radius > dis) { // >= ???
+                    SKAWriteToFile(file, item);
+                    
+                    results = hashTable[q].getBody(w); // to xreiazomaste???
+                    cout << "kontinoteros geitonas" << hashTable[q].getHeads(w) << endl;
+                    
+                    int min = dis;
+                    
+                    for (o = 1; o < countd; o++) {
+                        int dis = hamming_distance(querysetHam[q], results[o]);
 
-							results = hashTable[q].getBody(w);
-							cout << "kontinoteros geitonas" << hashTable[q].getHeads(w) << endl;
+                        if (dis < min) {
+                            min = dis;
+                        }
+                    }
 
-							int min = dis);
-							for (o = 1; o < countd; o++){
-
-									int dis = hamming_distance(querysetHam[q],results[o]);
-
-									if(dis < min){
-
-										min = dis;
-									}
-							}
-
-							cout << "True kontinoteros geitonas"  << min << endl;
-
-				}
-
+                    //SKAWriteToFile(file, "Nearest neighbor: " + "item");
+                    cout << "True kontinoteros geitonas " << min << endl;
+                }
 			}
-
 		}
-}
-	
-
-
-
+        
+        SKACloseFile(file);
+    }
 	else if (line.find("@metric_space euclidean") != string::npos) {
 		int countd = countDataFileEu(file, line);
         ifstream file2(filePath);
@@ -179,8 +185,8 @@ int main(int argc, const char *argv[]) {
         int size = 0;
         
         while (getline(file3, line)) {
-                       	datasetEu[size] = readDataFileEu(file3, line);
-                       	size++;
+            datasetEu[size] = readDataFileEu(file3, line);
+            size++;
         }
                
         //------------ diavasma dataset------------//
@@ -199,10 +205,18 @@ int main(int argc, const char *argv[]) {
 
         int queryDim = getDataFileDim(file6, line);
         ifstream file5(filePath);
-
-        double querySetEu[countq][queryDim];
+        
+        // ---------------------------
+        
+        double** querySetEu = new double*[countq];
+        
+        for (i = 0; i < queryDim; i++)
+            querySetEu[i] = new double[queryDim];
+        
         getline(file5, line);
-
+        
+        // ---------------------------
+        
         size = 0;
         
         while (getline(file5, line)) {
@@ -212,109 +226,110 @@ int main(int argc, const char *argv[]) {
             for (i = 0; i < dataDim; i++) {
                 querySetEu[size][i] = readQueryFileEu(file5, line, pos);
             }
-
+            
             size++;
         }
-        //------------ diavasma querry------------//
-	}
-	
-	   int** Geuc;	// deikths gia ton diplo pinaka ths euclidean
-	        int q, w, e, v, A;
-	        Geuc = G(k, L, EUCLIDEAN);
-	        
-	        for (q = 0; q < L; q++) {
-
-	        		for (w = 0; w < (2 ^ k); w++) {
-
-	        				e = Geuc[q][w];
-	        				hashTable[q].addBitString(datasetEu[e - 1]);
-	        			}
-	        }
-
-	        double dataEu[L][2 ^ k ][dataDim];
-
-	        for (q = 0; q < L; q++){
-
-	        		for (w = 0; w < (2 ^ k); w++)
-
-	        				pos = (hashTable[q].getHeads(w)).find_first_of("\t");
-
-	        				for(v = 0; v < dataDim; v++){
-
-	        						dataEu[q][w][v] = ConvertFileEu(hastTable[q].getHeads(w), pos);
-	        				}
-
-	        }
-	       //int dis = hamming_distance(querysetHam[0],hashTable[0].getHeads(0));
-	        		//int min = dis;
-	        double results[countd][dataDim];
-	        double J, minq;
-	        string* dataeustr = new string[L][2 ^ k][countd];
-	        unsigned long pos1[dataDim];
-	        e = 0;
-	        int K;
-	        for (q = 0; q < L; q++){
-
-	        	for (w = 0; w < (2 ^ k); w++){
-
-	        		//pos1[w] = (hashTable[q].getHeads(w)).find_first_of("\t");
-
-	        		for (v = 0; v < countq; v++){
-
-	        				J = distanceCalculate(dataEu, querySetEu, q, w, dataDim, v, queryDim);
-
-	        				if(radius > J){
-
-	        					dataeustr[q][w] = hashTable[q].getBody(w);
-	        					while(dataeustr[q][w][e] != NULL)
-
-	        						while (A < dataDim) {
-
-	        							pos1[w] = (dataeustr[q][w][e].find_first_of("\t"));
-
-	        								J = ConvertFileEu(dataeustr[q][w][e], pos1[w]);
-	        								dataeustr[q][w][e] = dataeustr[q][w][e].substr(pos1[w] + 1);
-
-	        								results[e][A] = J;
-	        								A++;
-	        						}
-
-	        					e++;
-	        					}
-
-
-	        						cout << "kontinoteros geitonas" << results[e][0] << endl;
-
-	        				}
-
-
-	        				if (radius > J){
-
-	        					for(K = 0; K < e; K++){
-
-	        						min = results[K][0];
-
-	        						for (A = 1; A < dataDim; A++){
-
-	        							if (min > results[K][A]){
-
-	        								min = results[K][A];
-	        							}
-	        						}
-	        					}
-
-
-	        				}
-	        				e = 0;
-	        		}
-
-	        	}
-	        }
+        
+        //------------ diavasma query------------//
+        
+        int** Geuc;	// deikths gia ton diplo pinaka ths euclidean
+        int h, w, e, v, A;
+        Geuc = G(k, L, EUCLIDEAN);
+        
+        for (h = 0; h < L; h++) {
+            for (w = 0; w < (2 ^ k); w++) {
+                e = Geuc[h][w];
+                hashTable[h].addBitString(datasetEu[e - 1]);
+            }
+        }
+        
+        double ***dataEu = new double**[L];
+        
+        for (h = 0; h < (2 ^ k); h++) {
+            dataEu[h] = new double*[2 ^ k];
+            
+            for (w = 0; w < dataDim; w++)
+                dataEu[h][w] = new double[dataDim];
+        }
+        
+        // ---------------------------
+        
+        for (h = 0; h < L; h++) {
+            for (w = 0; w < (2 ^ k); w++) {
+                pos = (hashTable[h].getHeads(w)).find_first_of("\t");
+                
+                for (v = 0; v < dataDim; v++) {
+                    dataEu[h][w][v] = ConvertFileEu(hashTable[h].getHeads(w), pos);
+                }
+            }
+        }
+        
+        // ---------------------------
+        
+        double results[countd][dataDim];
+        double J, minq;
+        
+        string ***dataeustr = new string**[L];
+        
+        for (h = 0; h < (2 ^ k); h++) {
+            dataeustr[h] = new string*[2 ^ k];
+            
+            for (w = 0; w < countd; w++)
+                dataeustr[h][w] = new string[countd];
+        }
+        
+        // ---------------------------
+        
+        unsigned long pos1[dataDim];
+        int K;
+        
+        e = 0;
+        
+        for (h = 0; h < L; h++) {
+            for (w = 0; w < (2 ^ k); w++) {
+                for (v = 0; v < countq; v++) {
+                    J = distanceCalculate(dataEu, querySetEu, h, w, dataDim, v, queryDim);
+                    
+                    if (radius > J) {
+                        dataeustr[h][w] = hashTable[h].getBody(w);
+                        
+                        while (dataeustr[h][w] != NULL) {
+                            while (A < dataDim) {
+                                pos1[w] = (dataeustr[h][w][e].find_first_of("\t"));
+                                
+                                J = ConvertFileEu(dataeustr[h][w][e], pos1[w]);
+                                dataeustr[h][w][e] = dataeustr[h][w][e].substr(pos1[w] + 1);
+                                
+                                results[e][A] = J;
+                                A++;
+                            }
+                        }
+                        
+                        e++;
+                    }
+                    
+                    cout << "kontinoteros geitonas" << results[e][0] << endl;
+                }
+                
+                if (radius > J) {
+                    for (K = 0; K < e; K++) {
+                        minq = results[K][0];
+                        
+                        for (A = 1; A < dataDim; A++) {
+                            if (minq > results[K][A]) {
+                                minq = results[K][A];
+                            }
+                        }
+                    }
+                }
+                
+                e = 0;
+            }
+        }
+    }
 
     return 0;
-
-	      
-    }
+}
 
 void initTime() {
     long currentTime = time(NULL);

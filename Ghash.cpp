@@ -5,9 +5,27 @@
 #include <math.h>
 #include "Ghash.hpp"
 
+#define HAMMING 1
+#define EUCLIDIAN 2
+#define COSINE 3
 
+using namespace std;
 
-int SKAHashTable::H(int metricSpaceId, int fileLines) {
+bool valueExists(int valueToSearch, int** arrayToSearch, int k, int L) {
+    int i, j;
+    
+    for (i = 0; i < L; i++) {
+        for (j = 0; j < (2 ^ k); j++) {
+            if (arrayToSearch[i][j] == valueToSearch) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+int H(int metricSpaceId, int fileLines) {
 	if (metricSpaceId == HAMMING) {
 		const unsigned int h = (rand() % fileLines) + 1;
 		return h;
@@ -16,18 +34,16 @@ int SKAHashTable::H(int metricSpaceId, int fileLines) {
 	return -1;
 }
 
-int SKAHashTable::H(int metricSpaceId) {
+int H(int metricSpaceId) {
 	if (metricSpaceId == EUCLIDIAN) {
 		double x = ((rand() % 99999) + 1) / 100000;
 		double y = ((rand() % 99999) + 1) / 100000;
 
 		// -------------------------------------
-
-		while (findDuplicateCoordinates(x, y)) {
-			x = ((rand() % 99999) + 1) / 100000;
-			y = ((rand() % 99999) + 1) / 100000;
-		}
-
+        
+        x = ((rand() % 99999) + 1) / 100000;
+        y = ((rand() % 99999) + 1) / 100000;
+        
 		// -------------------------------------
 
 		const double z = ((rand() % 99999) + 1) / 100000;
@@ -44,30 +60,55 @@ int SKAHashTable::H(int metricSpaceId) {
 	}
 	else if (metricSpaceId == COSINE) {
 
-	}
+    }
+    
 	return 0;
 }
 
-int** SKAHashTable::G(int k, int L, int fileLines, int metricSpaceId) {
-	int array[L][2 ^ k];
-	int i, j;
+int** G(int k, int L, int fileLines, int metricSpaceId) {
+    int i, j;
+    int** array = new int*[L];
+    
+    for (i = 0; i < (2 ^ k); i++)
+        array[i] = new int[(2 ^ k)];
+    
+    // ---------------------------
 
 	for (i = 0; i < L; i++) {
-		for (j = 0; j < (2 ^ k); j++) {
-			array[i][j] = H(metricSpaceId, fileLines);
+        for (j = 0; j < (2 ^ k); j++) {
+            int value = H(metricSpaceId, fileLines);
+            
+            while (valueExists(value, array, k, L)) {
+                value = H(metricSpaceId, fileLines);
+            }
+            
+			array[i][j] = value;
 		}
 	}
+    
 	return array;
 }
 
-int** SKAHashTable::G(int k, int L, int metricSpaceId) {
-	int array[L][2 ^ k];
-	int i, j;
-
+int** G(int k, int L, int metricSpaceId) {
+    int i, j;
+    int** array = new int*[L];
+    
+    for (i = 0; i < (2 ^ k); i++)
+        array[i] = new int[(2 ^ k)];
+    
+    // ---------------------------
+    
 	for (i = 0; i < L; i++) {
 		for (j = 0; j < (2 ^ k); j++) {
-			array[i][j] = H(metricSpaceId);
+            int value = H(metricSpaceId);
+            
+            while (valueExists(value, array, k, L)) {
+                value = H(metricSpaceId);
+            }
+            
+            array[i][j] = value;
 		}
 	}
+    
 	return array;
 }

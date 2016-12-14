@@ -1,14 +1,7 @@
-/*
- * Hamming.hpp
- *
- *  Created on: Nov 21, 2016
- *      Author: Zeaniel
- */
+#ifndef Hamming_hpp
+#define Hamming_hpp
 
-#ifndef Ghash_hpp
-#define Ghash_hpp
-
-int hamming_distance(string, string);
+int hamming_distance(std::string, std::string);
 
 #endif
 

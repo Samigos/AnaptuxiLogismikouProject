@@ -1,12 +1,3 @@
-/*
- * queryfile.cpp
- *
- *  Created on: Nov 22, 2016
- *      Author: Zeaniel
- */
-
-#include <iostream>
-#include <string.h>
 #include <string>
 #include "queryfile.hpp"
 
@@ -16,7 +7,7 @@ using namespace std;
 
 int countQueryFileHam(ifstream &file, string line) {
 	int count = 0;
-
+    
 	while (getline(file, line)) {
 		count++;
 	}
@@ -74,7 +65,6 @@ double readQueryFileEu(ifstream &file, string line, unsigned long pos) {
 }
 
 int radiusQueryFile(string line){
-
 	int radius;
 	const unsigned long pos = line.find_first_of("\t");
 	line = line.substr(pos + 1);

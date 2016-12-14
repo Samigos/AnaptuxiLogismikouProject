@@ -1,11 +1,3 @@
-//
-//  SKAHashTable.hpp
-//  ALProject
-//
-//  Created by Sotiris Kaniras on 19/10/16.
-//  Copyright © 2016 com.me. All rights reserved.
-//
-
 #ifndef SKAHashTable_hpp
 #define SKAHashTable_hpp
 
@@ -35,10 +27,9 @@ public:
     void init(int);
     
     std::string getHeads(int);
-	std::string getBody(int);
+	std::string* getBody(int);
     void addBitString(std::string);
 	void addDouble(double);
-    bool findDuplicateCoordinates(double, double);
     
     void print();
 };

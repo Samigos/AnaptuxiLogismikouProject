@@ -1,20 +1,15 @@
-/*
- * queryfile.hpp
- *
- *  Created on: Nov 22, 2016
- *      Author: Zeaniel
- */
-
 #ifndef queryfile_hpp
 #define queryfile_hpp
 
+#include <iostream>
+#include <fstream>
 
-int countQueryFileHam(ifstream&, string);
-int countQueryFileEu(ifstream&, string);
-int getQueryFileDim(ifstream&, string);
-string readQueryFileHam(ifstream&, string);
-double readQueryFileEu(ifstream&, string, unsigned long);
-int radiusQueryFile(string);
+int countQueryFileHam(std::ifstream&, std::string);
+int countQueryFileEu(std::ifstream&, std::string);
+int getQueryFileDim(std::ifstream&, std::string);
+std::string readQueryFileHam(std::ifstream&, std::string);
+double readQueryFileEu(std::ifstream&, std::string, unsigned long);
+int radiusQueryFile(std::string);
 
 #endif
 
